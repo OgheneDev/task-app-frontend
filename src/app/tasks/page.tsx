@@ -48,14 +48,14 @@ const Page = () => {
 
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="max-w-7xl mx-auto px-4 lg:px-8 py-8">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         className="space-y-8"
       >
         <div className="flex justify-between items-center">
-          <h1 className='text-3xl font-bold bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-transparent'>
+          <h1 className='text-2xl md:text-3xl font-bold bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-transparent'>
             View Tasks
           </h1>
           <button onClick={() => setIsModalOpen(true)} className='flex gap-2 bg-[#0284c7] hover:bg-[#0369a1] text-white cursor-pointer p-3 rounded-md'>
