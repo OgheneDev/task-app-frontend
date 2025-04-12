@@ -20,7 +20,7 @@ export const login = async ({ email, password }: LoginCredentials): Promise<void
         Cookies.set('authToken', token, {
           expires: 7,
           secure: true,
-          sameSite: 'strict',
+          sameSite: 'lax',
         });
   
         window.location.href = '/dashboard';
@@ -50,7 +50,7 @@ export const register = async ({ username, email, password }: RegisterCredential
 export const getMe = async () => {
     try {
       const response = await axiosInstance.get('/api/auth/me');
-      const { data, status } = response
+      const { data, status } = response 
 
       if (response.status !== 200) {
         throw new Error('Failed to fetch user');

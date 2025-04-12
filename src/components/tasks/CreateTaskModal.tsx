@@ -1,36 +1,46 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Task } from '@/types/types';
 import { AnimatePresence, motion } from 'framer-motion';
 import { X, Plus, Loader2, Calendar, Clock, Tag, Menu, Circle } from 'lucide-react';
 import { useTheme } from '@/hooks/useTheme';
 
+type FormData = Omit<Task, '_id'>;
+
 interface CreateTaskModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSubmit: (task: Omit<Task, '_id'>) => Promise<void>;
+  initialData?: Task | null;
+  isEditing?: boolean;
 }
 
-const CreateTaskModal: React.FC<CreateTaskModalProps> = ({ isOpen, onClose, onSubmit }) => {
-  const [formData, setFormData] = useState({
+const CreateTaskModal: React.FC<CreateTaskModalProps> = ({ 
+  isOpen, 
+  onClose, 
+  onSubmit, 
+  initialData, 
+  isEditing = false 
+}) => {
+  const [formData, setFormData] = useState<FormData>({
     title: '',
     description: '',
-    priority: 'high' as 'high' | 'medium' | 'low',
-    status: 'todo' as 'todo' | 'in-progress' | 'done',
+    priority: 'high',
+    status: 'todo',
     dueDate: '',
-    dueTime: '',
-    tags: [],
+    dueTime: '', 
+    tags: [] as string[],
     category: '',
-    attachments: [],
+    attachments: [] as string[],
     user: '',
-    collaborators: [],
+    collaborators: [] as string[],
     isRecurring: false,
     recurrencePattern: {
       interval: 0,
-      daysOfWeek: []
+      daysOfWeek: [] as string[]
     },
     timeTracking: {
       totalTime: 0,
-      timeEntries: []
+      timeEntries: [] as any[]
     },
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
@@ -40,6 +50,13 @@ const CreateTaskModal: React.FC<CreateTaskModalProps> = ({ isOpen, onClose, onSu
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { theme } = useTheme();
   const isDark = theme === 'dark';
+
+  useEffect(() => {
+    if (initialData) {
+      const { _id, ...taskData } = initialData;
+      setFormData(taskData);
+    }
+  }, [initialData]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setFormData({
@@ -61,19 +78,19 @@ const CreateTaskModal: React.FC<CreateTaskModalProps> = ({ isOpen, onClose, onSu
         status: 'todo',
         dueDate: '',
         dueTime: '',
-        tags: [],
+        tags: [] as string[],
         category: '',
-        attachments: [],
+        attachments: [] as string[],
         user: '',
-        collaborators: [],
+        collaborators: [] as string[],
         isRecurring: false,
         recurrencePattern: {
           interval: 0,
-          daysOfWeek: []
+          daysOfWeek: [] as string[]
         },
         timeTracking: {
           totalTime: 0,
-          timeEntries: []
+          timeEntries: [] as any[]
         },
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
@@ -145,7 +162,7 @@ const CreateTaskModal: React.FC<CreateTaskModalProps> = ({ isOpen, onClose, onSu
             {/* Header */}
             <div className={`flex justify-between items-center p-6 border-b ${isDark ? 'border-gray-700' : 'border-gray-200'}`}>
               <h2 className={`text-xl font-bold ${isDark ? 'text-white' : 'text-gray-800'}`}>
-                Create New Task
+                {isEditing ? 'Edit Task' : 'Create New Task'}
               </h2>
               <button
                 onClick={onClose}
@@ -327,7 +344,7 @@ const CreateTaskModal: React.FC<CreateTaskModalProps> = ({ isOpen, onClose, onSu
                   <button
                     type="button"
                     onClick={onClose}
-                    className={`px-4 py-2.5 text-sm font-medium rounded-lg transition-colors ${
+                    className={`px-4 py-2.5 text-sm font-medium cursor-pointer rounded-lg transition-colors ${
                       isDark
                         ? 'text-white bg-gray-800 hover:bg-gray-700'
                         : 'text-gray-700 bg-gray-100 hover:bg-gray-200'
@@ -338,7 +355,7 @@ const CreateTaskModal: React.FC<CreateTaskModalProps> = ({ isOpen, onClose, onSu
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className={`px-4 py-2.5 text-sm font-medium text-white rounded-lg transition-colors flex items-center gap-2 ${
+                    className={`px-4 py-2.5 text-sm font-medium cursor-pointer text-white rounded-lg transition-colors flex items-center gap-2 ${
                       isSubmitting
                         ? 'bg-blue-500 opacity-70'
                         : 'bg-blue-600 hover:bg-blue-700'
@@ -349,7 +366,8 @@ const CreateTaskModal: React.FC<CreateTaskModalProps> = ({ isOpen, onClose, onSu
                     ) : (
                       <Plus className="h-4 w-4" />
                     )}
-                    {isSubmitting ? 'Creating...' : 'Create Task'}
+                    {isSubmitting ? (isEditing ? 'Updating...' : 'Creating...') : 
+                                  (isEditing ? 'Update Task' : 'Create Task')}
                   </button>
                 </div>
               </form>

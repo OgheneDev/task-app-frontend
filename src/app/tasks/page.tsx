@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { MessageSquarePlus } from 'lucide-react'
-import { getTasks, createTask, deleteTask } from '@/api/tasks/requests'
+import { getTasks, createTask, deleteTask, updateTask } from '@/api/tasks/requests'
 import { Task } from '@/types/types'
 import TaskTable from '@/components/tasks/TaskTable'
 import TableSkeleton from '@/components/tasks/TableSkeleton'
@@ -12,8 +12,10 @@ const Page = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
 
-  useEffect(() => {
+  useEffect(() => { 
     fetchTasks();
   }, []);
 
@@ -43,15 +45,38 @@ const Page = () => {
     }
   };
 
-  const handleEditTask = async () => {
-    alert('EDITED')
-  }
+  const handleEditTask = async (task: Task) => {
+    setSelectedTask(task);
+    setIsEditing(true);
+    setIsModalOpen(true);
+  };
+
+  const handleUpdateTask = async (taskData: Omit<Task, '_id'>) => {
+    if (!selectedTask) return;
+    
+    try {
+      const updatedTask = await updateTask(selectedTask._id, taskData);
+      setTasks(tasks.map(task => 
+        task._id === selectedTask._id ? updatedTask : task
+      ));
+      setIsModalOpen(false);
+      setIsEditing(false);
+      setSelectedTask(null);
+    } catch (error) {
+      console.error('Error updating task:', error);
+    }
+  };
 
   const handleCreateTask = async (taskData: Omit<Task, '_id'>) => {
     const newTask = await createTask(taskData);
     setTasks([...tasks, newTask]);
   };
 
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setIsEditing(false);
+    setSelectedTask(null);
+  };
 
   return (
     <div className="max-w-7xl mx-auto px-4 lg:px-8 py-8">
@@ -74,8 +99,10 @@ const Page = () => {
 
         <CreateTaskModal
           isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
-          onSubmit={handleCreateTask}
+          onClose={handleCloseModal}
+          onSubmit={isEditing ? handleUpdateTask : handleCreateTask}
+          initialData={selectedTask}
+          isEditing={isEditing}
         />
       </motion.div>
     </div>

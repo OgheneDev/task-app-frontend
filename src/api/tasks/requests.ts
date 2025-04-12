@@ -48,3 +48,18 @@ export const deleteTask = async (taskId: string) => {
         throw error;
     }
 }
+
+export const updateTask = async (taskId: string, updatedTask: Partial<Task>) => {
+    try {
+        const response = await axiosInstance.put(`/api/tasks/${taskId}`, updatedTask);
+
+        if (response.status !== 200) {
+            throw new Error("Failed to update task");
+        }
+
+        return response.data.data;
+    } catch (error) {
+        console.error('Error updating task:', error);
+        throw error;
+    }
+}

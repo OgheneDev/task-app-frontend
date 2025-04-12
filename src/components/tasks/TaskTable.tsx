@@ -257,7 +257,7 @@ const TaskTable = ({ tasks, onDelete, onEdit }: TaskTableProps) => {
                   >
                     {i + 1}
                   </button>
-                ))}
+                ))} 
 
                 <button
                   onClick={() => handlePageChange(currentPage + 1)}
