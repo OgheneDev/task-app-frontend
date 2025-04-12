@@ -23,7 +23,6 @@ const LoginPage = () => {
   const { theme } = useTheme();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [rememberMe, setRememberMe] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [mounted, setMounted] = useState(false);
@@ -39,7 +38,7 @@ const LoginPage = () => {
     setError('');
 
     try {
-      await login({ email, password, rememberMe });
+      await login({ email, password });
       router.push('/dashboard');
     } catch (err) {
       const error = err as Error;
@@ -175,23 +174,6 @@ const LoginPage = () => {
           </div>
 
           <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <input
-                id="remember-me"
-                name="remember-me"
-                type="checkbox"
-                checked={rememberMe}
-                onChange={(e) => setRememberMe(e.target.checked)}
-                className={`h-4 w-4 rounded ${
-                  isDark 
-                    ? 'bg-gray-800 border-gray-600 text-[#0284c7] focus:ring-[#0ea5e9]' 
-                    : 'border-gray-300 text-[#0284c7] focus:ring-[#0ea5e9]'
-                } transition-colors`}
-              />
-              <label htmlFor="remember-me" className={`ml-2 block text-sm ${isDark ? 'text-gray-300' : 'text-gray-900'}`}>
-                Remember me
-              </label>
-            </div>
 
             <div className="text-sm">
               <Link href="/forgot-password" className={`font-medium ${isDark ? 'text-[#38bdf8] hover:text-[#7dd3fc]' : 'text-[#0284c7] hover:text-[#0ea5e9]'} transition-colors`}>

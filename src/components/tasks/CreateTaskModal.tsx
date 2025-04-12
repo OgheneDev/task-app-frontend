@@ -123,7 +123,7 @@ const CreateTaskModal: React.FC<CreateTaskModalProps> = ({
     switch (status) {
       case 'todo':
         return 'bg-gray-500';
-      case 'in-progress':
+      case 'in_progress':
         return 'bg-blue-500';
       case 'done':
         return 'bg-green-500';
@@ -258,7 +258,7 @@ const CreateTaskModal: React.FC<CreateTaskModalProps> = ({
                         className={`${inputClassName} pl-10`}
                       >
                         <option value="todo">To Do</option>
-                        <option value="in-progress">In Progress</option>
+                        <option value="in_progress">In Progress</option>
                         <option value="done">Completed</option>
                       </select>
                     </div>
@@ -335,7 +335,7 @@ const CreateTaskModal: React.FC<CreateTaskModalProps> = ({
                   <div className={`${getStatusColor(formData.status)} text-white px-3 py-1 rounded-full text-xs font-medium flex items-center`}>
                     <Circle size={12} className="mr-1 fill-current" />
                     {formData.status === 'todo' ? 'To Do' : 
-                     formData.status === 'in-progress' ? 'In Progress' : 'Completed'}
+                     formData.status === 'in_progress' ? 'In Progress' : 'Completed'}
                   </div>
                 </div>
 

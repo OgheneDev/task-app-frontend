@@ -59,7 +59,7 @@ const DashboardPage = () =>  {
           {
             id: 3,
             title: 'In Progress',
-            value: (validTasks.filter(task => task.status === 'in-progress').length).toString(),
+            value: (validTasks.filter(task => task.status === 'in_progress').length).toString(),
             Icon: FiClock,
             color: 'bg-yellow-500'
           },

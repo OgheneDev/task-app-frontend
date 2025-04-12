@@ -3,7 +3,6 @@ import { IconType } from "react-icons";
 export interface LoginCredentials {
     email: string;
     password: string;
-    rememberMe: boolean;
 }
 
 export interface LoginResponse {
@@ -44,7 +43,7 @@ export interface Task {
     description: string;
     user: string;
     priority: 'high' | 'medium' | 'low';
-    status: 'todo' | 'in-progress' | 'done';
+    status: 'todo' | 'in_progress' | 'done';
     dueDate: string;
     dueTime: string;
     tags: string[];

@@ -62,7 +62,7 @@ const TaskTable = ({ tasks, onDelete, onEdit }: TaskTableProps) => {
           textColor: isDark ? 'text-green-300' : 'text-green-800',
           icon: <CheckCircle className="h-3.5 w-3.5 mr-1.5" />
         };
-      case 'in-progress': 
+      case 'in_progress': 
         return { 
           bgColor: isDark ? 'bg-yellow-900/30' : 'bg-yellow-100', 
           textColor: isDark ? 'text-yellow-300' : 'text-yellow-800',
