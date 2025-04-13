@@ -1,9 +1,29 @@
 'use client'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
-import { CheckCircle2, Clock, Trophy } from 'lucide-react'
+import { CheckCircle2, Clock, ListTodo } from 'lucide-react'
+import { getTasks } from '@/api/tasks/requests'
+import { Task } from '@/types/types'
 
 const ActivitySection = () => {
+  const [taskStats, setTaskStats] = useState({
+    completed: 0,
+    total: 0,
+    pending: 0
+  })
+
+  useEffect(() => {
+    const fetchTaskStats = async () => {
+      const tasks = await getTasks()
+      setTaskStats({
+        completed: tasks.filter((task: Task) => task.status === 'done').length,
+        total: tasks.length,
+        pending: tasks.filter((task: Task) => task.status === 'todo' || task.status === 'in_progress').length
+      })
+    }
+    fetchTaskStats()
+  }, [])
+
   const container = {
     hidden: { opacity: 0 },
     show: {
@@ -24,44 +44,47 @@ const ActivitySection = () => {
       variants={container}
       initial="hidden"
       animate="show"
-      className="space-y-4"
+      className="bg-white rounded-xl p-6 shadow-sm"
     >
-      <h3 className="text-xl font-semibold">Activity Overview</h3>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <h3 className="text-xl font-semibold mb-6">Activity Overview</h3>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <motion.div 
           variants={item}
-          whileHover={{ scale: 1.03 }}
-          className="stat-card p-6 bg-white rounded-xl shadow-sm border border-gray-100 hover:border-blue-500 transition-all"
+          className="flex items-center gap-4"
         >
-          <div className="flex items-center gap-3 mb-2">
-            <CheckCircle2 className="h-5 w-5 text-green-500" />
-            <h4 className="text-gray-600">Tasks Completed</h4>
+          <div className="p-3 bg-green-50 rounded-lg">
+            <CheckCircle2 className="h-6 w-6 text-green-500" />
           </div>
-          <p className="text-3xl font-bold text-gray-900">127</p>
+          <div>
+            <p className="text-sm text-gray-600">Completed Tasks</p>
+            <p className="text-xl font-semibold">{taskStats.completed}</p>
+          </div>
         </motion.div>
 
         <motion.div 
           variants={item}
-          whileHover={{ scale: 1.03 }}
-          className="stat-card p-6 bg-white rounded-xl shadow-sm border border-gray-100 hover:border-blue-500 transition-all"
+          className="flex items-center gap-4"
         >
-          <div className="flex items-center gap-3 mb-2">
-            <Clock className="h-5 w-5 text-blue-500" />
-            <h4 className="text-gray-600">Time Logged</h4>
+          <div className="p-3 bg-blue-50 rounded-lg">
+            <Clock className="h-6 w-6 text-blue-500" />
           </div>
-          <p className="text-3xl font-bold text-gray-900">48h</p>
+          <div>
+            <p className="text-sm text-gray-600">Total Tasks</p>
+            <p className="text-xl font-semibold">{taskStats.total}</p>
+          </div>
         </motion.div>
 
         <motion.div 
           variants={item}
-          whileHover={{ scale: 1.03 }}
-          className="stat-card p-6 bg-white rounded-xl shadow-sm border border-gray-100 hover:border-blue-500 transition-all"
+          className="flex items-center gap-4"
         >
-          <div className="flex items-center gap-3 mb-2">
-            <Trophy className="h-5 w-5 text-yellow-500" />
-            <h4 className="text-gray-600">Achievement Points</h4>
+          <div className="p-3 bg-yellow-50 rounded-lg">
+            <ListTodo className="h-6 w-6 text-yellow-500" />
           </div>
-          <p className="text-3xl font-bold text-gray-900">850</p>
+          <div>
+            <p className="text-sm text-gray-600">Pending Tasks</p>
+            <p className="text-xl font-semibold">{taskStats.pending}</p>
+          </div>
         </motion.div>
       </div>
     </motion.div>
