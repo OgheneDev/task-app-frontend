@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
 // Routes user can access without being logged in
-const publicRoutes = ['/', '/login', '/register']
+const publicRoutes = ['/', '/login', '/register', '/forgot-password']
 
 export function middleware(request: NextRequest) {
   const token = request.cookies.get('authToken')?.value

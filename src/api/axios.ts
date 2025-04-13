@@ -40,10 +40,10 @@ axiosInstance.interceptors.request.use(
         const token = tokenUtils.getToken();
         console.log('Token from localStorage:', token); // Debug token
 
-        if (!token) {
+        // Don't redirect if we're trying to login
+        if (!token && !config.url?.includes('/login')) {
             console.warn('No authentication token found');
-            // Optionally redirect to login if token is required
-             window.location.href = '/login';
+            window.location.href = '/login';
         }
 
         if (token) {

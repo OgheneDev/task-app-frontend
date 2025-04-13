@@ -1,6 +1,6 @@
 import axiosInstance, { tokenUtils } from "../axios";
 import { AxiosError } from "axios";
-import { LoginCredentials, LoginResponse, ErrorResponse, RegisterCredentials } from "@/types/types";
+import { LoginCredentials, LoginResponse, ErrorResponse, RegisterCredentials, ForgotPasswordCredentials } from "@/types/types";
 import Cookies from 'js-cookie'
 
 export const login = async ({ email, password }: LoginCredentials): Promise<void> => {
@@ -23,6 +23,8 @@ export const login = async ({ email, password }: LoginCredentials): Promise<void
           sameSite: 'lax',
         });
   
+        // Allow the token to be stored before redirecting
+        await new Promise(resolve => setTimeout(resolve, 100));
         window.location.href = '/dashboard';
       }
     } catch (error) {
@@ -45,6 +47,22 @@ export const register = async ({ username, email, password }: RegisterCredential
         const axiosError = error as AxiosError<ErrorResponse>;
         throw new Error(axiosError.response?.data?.message || 'Registration failed');
     }
+}
+
+export const forgotPassword = async ({ email }: ForgotPasswordCredentials): Promise<void> => {
+      try {
+        const response = await axiosInstance.post(
+          '/api/auth/forgotpassword',
+          { email }
+        );
+
+        if (response.status === 200) {
+          window.location.href = "/register"
+        }
+      } catch (error) {
+        const axiosError = error as AxiosError<ErrorResponse>;
+        throw new Error(axiosError.response?.data?.message || 'Forgot Password failed');
+      }
 }
 
 export const getMe = async () => {

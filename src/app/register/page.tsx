@@ -133,7 +133,6 @@ const RegisterPage = () => {
                 id="username"
                 name="username"
                 type="text"
-                autoComplete="username"
                 required
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
@@ -155,7 +154,6 @@ const RegisterPage = () => {
                 id="email-address"
                 name="email"
                 type="email"
-                autoComplete="email"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -222,7 +220,7 @@ const RegisterPage = () => {
                 dark:bg-[#0ea5e9] dark:hover:bg-[#0284c7]
                 focus:outline-none focus:ring-2 focus:ring-offset-2 
                 focus:ring-[#0ea5e9] dark:focus:ring-[#38bdf8] 
-                transition-colors
+                transition-colors cursor-pointer
                 ${isLoading ? 'opacity-70 cursor-not-allowed' : ''}
               `}
             >

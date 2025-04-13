@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { getMe } from '@/api/auth/requests'
 import { useTheme } from '@/hooks/useTheme'
+import { logout } from '@/api/auth/requests'
 
 type NavbarProps = { 
     onMenuClick: () => void;
@@ -21,8 +22,11 @@ const Navbar = ({ onMenuClick }: NavbarProps) => {
           setUsername(userData.username);
       };
       fetchUser();
-  }, []);
+    }, []);
 
+    const handleLogout = () => {
+      logout();
+    }
 
   return (
     <nav className={`${isDark ? 'bg-gray-900 border-gray-800' : 'bg-white border-gray-200'} border-b`}>
@@ -48,7 +52,7 @@ const Navbar = ({ onMenuClick }: NavbarProps) => {
             <div className="flex-shrink-0">
               <button
                 onClick={toggleTheme}
-                className={`p-2 rounded-md ${isDark ? 'text-gray-400 hover:text-gray-300 hover:bg-gray-800' : 'text-gray-500 hover:text-gray-600 hover:bg-gray-100'} focus:outline-none focus:ring-2 focus:ring-inset focus:ring-[#0ea5e9]`}
+                className={`p-2 rounded-md cursor-pointer ${isDark ? 'text-gray-400 hover:text-gray-300 hover:bg-gray-800' : 'text-gray-500 hover:text-gray-600 hover:bg-gray-100'} focus:outline-none focus:ring-2 focus:ring-inset focus:ring-[#0ea5e9]`}
               >
                 {theme === 'dark' ? (
                   <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -124,7 +128,7 @@ const Navbar = ({ onMenuClick }: NavbarProps) => {
               <div>
                 <button
                   onClick={() => setProfileOpen(!profileOpen)}
-                  className={`max-w-xs ${isDark ? 'bg-gray-800' : 'bg-white'} rounded-full flex items-center text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#0ea5e9]`}
+                  className={`max-w-xs cursor-pointer ${isDark ? 'bg-gray-800' : 'bg-white'} rounded-full flex items-center text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#0ea5e9]`}
                 >
                   <span className="sr-only">Open user menu</span>
                   <div className="h-8 w-8 rounded-full bg-gradient-to-r from-[#38bdf8] to-[#8b5cf6] flex items-center justify-center text-white">
@@ -141,9 +145,9 @@ const Navbar = ({ onMenuClick }: NavbarProps) => {
                     Settings
                   </Link>
                   <div className={`border-t ${isDark ? 'border-gray-800' : 'border-gray-200'}`}></div>
-                  <Link href="/login" className={`block px-4 py-2 text-sm ${isDark ? 'text-gray-300 hover:bg-gray-800' : 'text-gray-700 hover:bg-gray-100'}`}>
+                  <button onClick={handleLogout} className={`block px-4 py-2 text-start cursor-pointer text-sm w-full ${isDark ? 'text-gray-300 hover:bg-gray-800' : 'text-gray-700 hover:bg-gray-100'}`}>
                     Sign out
-                  </Link>
+                  </button>
                 </div>
               )}
             </div>

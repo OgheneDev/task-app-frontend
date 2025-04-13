@@ -19,6 +19,10 @@ export interface RegisterCredentials {
     password: string;
 }
 
+export interface ForgotPasswordCredentials {
+    email: string;
+}
+
 export interface StatItem {
     id: number;
     title: string;
