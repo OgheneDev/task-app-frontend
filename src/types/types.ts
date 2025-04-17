@@ -23,6 +23,21 @@ export interface ForgotPasswordCredentials {
     email: string;
 }
 
+export interface UpdatePasswordCredentials {
+    currentPassword: string;
+    newPassword: string;
+  }
+  
+  export interface UpdateDetailsCredentials {
+    username?: string;
+    bio?: string;
+  }
+  
+  export interface DeleteAccountCredentials {
+    password: string;
+  }
+  
+
 export interface StatItem {
     id: number;
     title: string;
