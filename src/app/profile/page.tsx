@@ -8,7 +8,7 @@ const ProfilePage = () => {
   const isDark = theme === 'dark'
   
   return (
-    <div>
+    <div className='p-1'>
       <PersonalInfoSection isDark={isDark} />
       <ActivitySection isDark={isDark} />
     </div>

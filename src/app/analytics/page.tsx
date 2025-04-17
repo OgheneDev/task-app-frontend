@@ -196,7 +196,7 @@ export default function AnalyticsPage() {
 
   return (
     <div className="min-h-screen">
-      <div className="max-w-7xl mx-auto px-4 py-8">
+      <div className="max-w-7xl mx-auto px-1 md:px-4 py-8">
         {/* Header section remains the same */}
         <h1 className='text-2xl md:text-3xl font-bold bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text mb-5 text-transparent'>
             View Analytics

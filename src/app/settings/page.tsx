@@ -100,9 +100,9 @@ const SettingsPage = () => {
   };
 
   return (
-    <div className={`min-h-screen sm:py-5 md:p-10 ${isDark ? 'bg-gray-900 text-white' : 'bg-gray-50 text-gray-900'}`}>
+    <div className={`min-h-screen p-1 md:p-10 ${isDark ? 'bg-gray-900 text-white' : 'bg-gray-50 text-gray-900'}`}>
       <div className="max-w-4xl mx-auto space-y-8">
-        <h1 className={`text-4xl font-bold ${isDark 
+        <h1 className={`text-2xl md:text-3xl font-bold ${isDark 
           ? 'bg-gradient-to-r from-blue-400 to-purple-400' 
           : 'bg-gradient-to-r from-blue-600 to-purple-600'} bg-clip-text text-transparent`}>
           Settings
@@ -118,7 +118,7 @@ const SettingsPage = () => {
         >
           <div className="flex items-center justify-between">
             <div>
-              <h2 className={`text-2xl font-bold ${isDark ? 'text-gray-100' : 'text-gray-800'}`}>
+              <h2 className={`text-xl md:text-2xl font-bold ${isDark ? 'text-gray-100' : 'text-gray-800'}`}>
                 Appearance
               </h2>
               <p className={`mt-1 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
@@ -146,7 +146,7 @@ const SettingsPage = () => {
             ? 'bg-gradient-to-br from-gray-800/60 to-gray-800/30 backdrop-blur-lg border-gray-700/20' 
             : 'bg-gradient-to-br from-white/60 to-white/30 backdrop-blur-lg border-white/20'}`}
         >
-          <h2 className={`text-2xl font-bold ${isDark 
+          <h2 className={`text-xl md:text-2xl font-bold ${isDark 
             ? 'bg-gradient-to-r from-blue-400 to-purple-400' 
             : 'bg-gradient-to-r from-blue-600 to-purple-600'} bg-clip-text text-transparent mb-6`}>
             Password Settings
@@ -245,7 +245,7 @@ const SettingsPage = () => {
             ? 'bg-gradient-to-br from-gray-800/60 to-red-900/10 backdrop-blur-lg border-red-900/20' 
             : 'bg-gradient-to-br from-white/60 to-red-50 backdrop-blur-lg border-red-100'}`}
         >
-          <h2 className={`text-2xl font-bold ${isDark ? 'text-red-400' : 'text-red-500'} mb-4`}>
+          <h2 className={`text-xl md:text-2xl font-bold ${isDark ? 'text-red-400' : 'text-red-500'} mb-4`}>
             Danger Zone
           </h2>
           
