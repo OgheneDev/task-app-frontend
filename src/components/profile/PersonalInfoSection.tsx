@@ -114,7 +114,7 @@ const PersonalInfoSection = ({ isDark }: PersonalInfoSectionProps) => {
                     : 'bg-gradient-to-br from-white/60 to-white/30 backdrop-blur-lg shadow-xl border border-white/20'
                 }`}
         >
-            <h2 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+            <h2 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                 Personal Information
             </h2>
             <div className="flex flex-col items-center gap-4">
@@ -150,7 +150,7 @@ const PersonalInfoSection = ({ isDark }: PersonalInfoSectionProps) => {
                     />
                 </div>
                 <div className="relative group">
-                    <Mail className={`absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 ${isDark ? 'text-gray-500' : 'text-gray-400'} transition-colors group-focus-within:text-blue-500`} />
+                    <Mail className={`absolute left-4 top-[36%] -translate-y-1/2 h-5 w-5 ${isDark ? 'text-gray-500' : 'text-gray-400'} transition-colors group-focus-within:text-blue-500`} />
                     <input 
                         type="email" 
                         placeholder="Email" 

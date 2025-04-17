@@ -5,7 +5,12 @@ import { useTheme } from "@/hooks/useTheme"
 import { getMe } from "@/api/auth/requests"
 import { useEffect, useState } from "react"
 
-const Sidebar = () => {
+// Add onNavigate prop to allow AppLayout to know when navigation occurs
+interface SidebarProps {
+  onNavigate?: () => void;
+}
+
+const Sidebar = ({ onNavigate }: SidebarProps) => {
     const pathname = usePathname();
     const { theme } = useTheme();
     const isDark = theme === 'dark';
@@ -26,6 +31,13 @@ const Sidebar = () => {
         { name: 'Settings', href: '/settings', icon: 'M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z' },
     ];
 
+    // Function to handle navigation clicks
+    const handleNavClick = () => {
+      if (onNavigate) {
+        onNavigate();
+      }
+    };
+
   return (
     <div className={`flex flex-col flex-grow pt-5 pb-4 overflow-y-auto ${isDark ? 'bg-gray-900 border-gray-800' : 'bg-white border-gray-200'} border-r`}>
       <div className="flex items-center flex-shrink-0 px-4">
@@ -44,6 +56,7 @@ const Sidebar = () => {
               <Link
                 key={item.name}
                 href={item.href}
+                onClick={handleNavClick}
                 className={`${
                   isActive
                     ? `${isDark ? 'bg-gray-800 text-[#38bdf8]' : 'bg-[#f0f9ff] text-[#0284c7]'}`
@@ -71,7 +84,11 @@ const Sidebar = () => {
         </nav>
       </div>
       <div className={`flex-shrink-0 flex border-t ${isDark ? 'border-gray-800' : 'border-gray-200'} p-4`}>
-        <Link href="/profile" className="flex-shrink-0 w-full group block">
+        <Link 
+          href="/profile" 
+          onClick={handleNavClick}
+          className="flex-shrink-0 w-full group block"
+        >
           <div className="flex items-center">
             <div>
               <div className="h-9 w-9 rounded-full bg-gradient-to-r from-[#38bdf8] to-[#8b5cf6] flex items-center justify-center text-white">
