@@ -100,7 +100,7 @@ const SettingsPage = () => {
   };
 
   return (
-    <div className={`min-h-screen p-1 md:p-10 ${isDark ? 'bg-gray-900 text-white' : 'bg-gray-50 text-gray-900'}`}>
+    <div className={`min-h-screen px-1 py-3 md:p-10 ${isDark ? 'bg-gray-900 text-white' : 'bg-gray-50 text-gray-900'}`}>
       <div className="max-w-4xl mx-auto space-y-8">
         <h1 className={`text-2xl md:text-3xl font-bold ${isDark 
           ? 'bg-gradient-to-r from-blue-400 to-purple-400' 
