@@ -22,13 +22,13 @@ const Hero = () => {
           <div className="flex gap-4 justify-center">
             <Link 
               href="/dashboard"
-              className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-medium transition-colors"
+              className="bg-blue-600 text-sm hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-medium transition-colors"
             >
               Get Started
             </Link>
             <Link
               href="/tasks"
-              className="border border-blue-600 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 px-8 py-3 rounded-lg font-medium transition-colors"
+              className="border text-sm border-blue-600 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 px-8 py-3 rounded-lg font-medium transition-colors"
             >
               View Demo
             </Link>
