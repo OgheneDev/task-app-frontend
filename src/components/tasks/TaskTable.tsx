@@ -86,8 +86,22 @@ const TaskTable = ({ tasks, onDelete, onEdit }: TaskTableProps) => {
     }).format(date);
   };
 
-  const isOverdue = (dueDate: string) => {
-    return new Date(dueDate) < new Date();
+  const isOverdue = (dueDate: string, dueTime?: string) => {
+    const now = new Date();
+    const taskDueDate = new Date(dueDate);
+    
+    // If there's no time specified, compare just the dates (end of day)
+    if (!dueTime) {
+      // Set the task's due time to end of day (23:59:59)
+      taskDueDate.setHours(23, 59, 59);
+      return now > taskDueDate;
+    }
+    
+    // If there is a time specified, incorporate it into the date
+    const [hours, minutes] = dueTime.split(':').map(Number);
+    taskDueDate.setHours(hours, minutes, 0);
+    
+    return now > taskDueDate;
   };
 
   // Animation variants
@@ -144,7 +158,7 @@ const TaskTable = ({ tasks, onDelete, onEdit }: TaskTableProps) => {
               {currentTasks.map((task, index) => {
                 const priorityConfig = getPriorityConfig(task.priority);
                 const statusConfig = getStatusConfig(task.status);
-                const overdueTask = isOverdue(task.dueDate) && task.status !== 'done';
+                const overdueTask = isOverdue(task.dueDate, task.dueTime) && task.status !== 'done';
 
                 return (
                   <motion.tr 
