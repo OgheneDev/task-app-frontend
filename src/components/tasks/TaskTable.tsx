@@ -173,7 +173,7 @@ const TaskTable = ({ tasks, onDelete, onEdit }: TaskTableProps) => {
                   return (
                     <motion.tr 
                       key={task._id} 
-                      className={`${isDark ? 'hover:bg-gray-800' : 'hover:bg-gray-50'} transition-colors`}
+                      className={`${isDark ? 'hover:bg-gray-800' : 'hover:bg-gray-50'} transition-colors cursor-pointer`}
                       variants={tableRowVariants}
                       custom={index}
                       whileHover={{ scale: 1.01 }}
