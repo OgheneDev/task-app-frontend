@@ -5,21 +5,21 @@ import type { NextRequest } from 'next/server'
 const publicRoutes = ['/', '/login', '/register', '/forgot-password']
 
 export function middleware(request: NextRequest) {
-  const token = request.cookies.get('authToken')?.value
-
-  const path = request.nextUrl.pathname
-
-  const isPublic = publicRoutes.includes(path)
-
+  // Check for the frontend token cookie
+  const token = request.cookies.get('frontendToken')?.value;
+  
+  const path = request.nextUrl.pathname;
+  const isPublic = publicRoutes.includes(path);
+  
   if (!token && !isPublic) {
-    return NextResponse.redirect(new URL('/login', request.url))
+    return NextResponse.redirect(new URL('/login', request.url));
   }
-
+  
   if (token && (path === '/login' || path === '/register')) {
-    return NextResponse.redirect(new URL('/dashboard', request.url))
+    return NextResponse.redirect(new URL('/dashboard', request.url));
   }
-
-  return NextResponse.next()
+  
+  return NextResponse.next();
 }
 
 export const config = { 

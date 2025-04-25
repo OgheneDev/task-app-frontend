@@ -13,34 +13,29 @@ import {
 import Cookies from 'js-cookie'
 
 export const login = async ({ email, password }: LoginCredentials): Promise<void> => {
-    try {
-      const response = await axiosInstance.post<LoginResponse>(
-        '/api/auth/login',
-        { email, password }
-      );
+  try {
+    const response = await axiosInstance.post<LoginResponse>(
+      '/api/auth/login',
+      { email, password }
+    );
+        
+    if (response.status === 200) {
+      const { token } = response.data;
+            
+      // Store in localStorage (for axios)
+      tokenUtils.setToken(token);
       
-      if (response.status === 200) {
-        const { token } = response.data;
-        
-        // Store in localStorage (for axios)
-        tokenUtils.setToken(token);
-        
-        // Store in cookie (for middleware)
-        Cookies.set('authToken', token, {
-          expires: 7,
-          secure: true,
-          sameSite: 'lax',
-        });
-        
-        // Allow the token to be stored before redirecting
-        await new Promise(resolve => setTimeout(resolve, 100));
-        window.location.href = '/dashboard';
-      }
-    } catch (error) {
-      const axiosError = error as AxiosError<ErrorResponse>;
-      throw new Error(axiosError.response?.data?.message || 'Login failed');
+      // Set a cookie on the frontend domain using JavaScript
+      document.cookie = `frontendToken=${token}; path=/; max-age=${60*60*24*7}`;
+      
+      // Redirect to dashboard
+      window.location.href = '/dashboard';
     }
+  } catch (error) {
+    const axiosError = error as AxiosError<ErrorResponse>;
+    throw new Error(axiosError.response?.data?.message || 'Login failed');
   }
+}
   
 export const register = async ({ username, email, password }: RegisterCredentials): Promise<void> => {
     try {
@@ -89,8 +84,13 @@ export const getMe = async () => {
 }
 
 export const logout = () => {
+  // Clear localStorage token
   tokenUtils.removeToken();
-  Cookies.remove('authToken');
+  
+  // Clear the frontend cookie
+  document.cookie = "frontendToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+  
+  // Redirect to login page
   window.location.href = '/login';
 }
 
