@@ -9,10 +9,10 @@ import {
   Mail, 
   Lock, 
   LogIn, 
-  UserPlus, 
+  UserPlus,  
   AlertCircle,
   Loader2,
-  Eye,
+  Eye, 
   EyeOff
 } from 'lucide-react';
 
@@ -29,16 +29,47 @@ const LoginPage = () => {
   const [error, setError] = useState('');
   const [mounted, setMounted] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [validationErrors, setValidationErrors] = useState({
+    email: '',
+    password: ''
+  });
 
   // Ensure hydration mismatch is avoided
   useEffect(() => {
     setMounted(true);
   }, []);
 
+  const validateForm = () => {
+    const errors = {
+      email: '',
+      password: ''
+    };
+    
+    if (!email) {
+      errors.email = 'Email is required';
+    } else if (!/\S+@\S+\.\S+/.test(email)) {
+      errors.email = 'Please enter a valid email';
+    }
+
+    if (!password) {
+      errors.password = 'Password is required';
+    } else if (password.length < 6) {
+      errors.password = 'Password must be at least 6 characters';
+    }
+
+    setValidationErrors(errors);
+    return !errors.email && !errors.password;
+  };
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setIsLoading(true);
     setError('');
+    
+    if (!validateForm()) {
+      return;
+    }
+
+    setIsLoading(true);
 
     try {
       await login({ email, password });
@@ -46,7 +77,6 @@ const LoginPage = () => {
     } catch (err) {
       const error = err as Error;
       setError(error.message);
-    } finally {
       setIsLoading(false);
     }
   };
@@ -142,14 +172,20 @@ const LoginPage = () => {
                 autoComplete="email"
                 required
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  setValidationErrors(prev => ({ ...prev, email: '' }));
+                }}
                 className={`appearance-none rounded-none relative block w-full pl-10 px-3 py-3 border ${
                   isDark 
                     ? 'border-gray-600 placeholder-gray-400 text-gray-100 bg-gray-800 focus:ring-[#0ea5e9] focus:border-[#0ea5e9]' 
                     : 'border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-[#0ea5e9] focus:border-[#0ea5e9]'
-                } rounded-t-md focus:outline-none focus:z-10 transition-colors`}
+                } ${validationErrors.email ? 'border-red-500' : ''} rounded-t-md focus:outline-none focus:z-10 transition-colors`}
                 placeholder="Email address"
               />
+              {validationErrors.email && (
+                <p className="text-red-500 text-xs mt-1">{validationErrors.email}</p>
+              )}
             </div>
             <div className="relative">
             <div className="flex gap-2 items-center mb-3">
@@ -165,14 +201,20 @@ const LoginPage = () => {
                 autoComplete="current-password"
                 required
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                  setValidationErrors(prev => ({ ...prev, password: '' }));
+                }}
                 className={`appearance-none rounded-none relative block w-full pl-10 px-3 py-3 border ${
                   isDark 
                     ? 'border-gray-600 placeholder-gray-400 text-gray-100 bg-gray-800 focus:ring-[#0ea5e9] focus:border-[#0ea5e9]' 
                     : 'border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-[#0ea5e9] focus:border-[#0ea5e9]'
-                } rounded-b-md focus:outline-none focus:z-10 transition-colors`}
+                } ${validationErrors.password ? 'border-red-500' : ''} rounded-b-md focus:outline-none focus:z-10 transition-colors`}
                 placeholder="Password"
               />
+              {validationErrors.password && (
+                <p className="text-red-500 text-xs mt-1">{validationErrors.password}</p>
+              )}
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}

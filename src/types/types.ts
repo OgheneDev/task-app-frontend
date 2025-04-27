@@ -10,7 +10,9 @@ export interface LoginResponse {
 }
 
 export interface ErrorResponse {
-    message: string;
+    message?: string;
+    error?: string;
+    success: boolean;
 }
 
 export interface RegisterCredentials {

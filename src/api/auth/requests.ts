@@ -21,19 +21,18 @@ export const login = async ({ email, password }: LoginCredentials): Promise<void
         
     if (response.status === 200) {
       const { token } = response.data;
-            
-      // Store in localStorage (for axios)
       tokenUtils.setToken(token);
-      
-      // Set a cookie on the frontend domain using JavaScript
       document.cookie = `frontendToken=${token}; path=/; max-age=${60*60*24*7}`;
-      
-      // Redirect to dashboard
-      window.location.href = '/dashboard';
+      return;
     }
+    throw new Error('Login failed');
   } catch (error) {
     const axiosError = error as AxiosError<ErrorResponse>;
-    throw new Error(axiosError.response?.data?.message || 'Login failed');
+    // Check for both error and message properties
+    const serverMessage = axiosError.response?.data?.error || 
+                         axiosError.response?.data?.message || 
+                         axiosError.message;
+    throw new Error(serverMessage);
   }
 }
   
@@ -49,7 +48,10 @@ export const register = async ({ username, email, password }: RegisterCredential
         }
     } catch (error) {
         const axiosError = error as AxiosError<ErrorResponse>;
-        throw new Error(axiosError.response?.data?.message || 'Registration failed');
+        const serverMessage = axiosError.response?.data?.error || 
+                            axiosError.response?.data?.message || 
+                            axiosError.message;
+        throw new Error(serverMessage);
     }
 }
 

@@ -5,10 +5,15 @@ import type { NextRequest } from 'next/server'
 const publicRoutes = ['/', '/login', '/register', '/forgot-password']
 
 export function middleware(request: NextRequest) {
+  const path = request.nextUrl.pathname;
+  
+  // Skip middleware for API routes
+  if (path.startsWith('/api/')) {
+    return NextResponse.next();
+  }
+
   // Check for the frontend token cookie
   const token = request.cookies.get('frontendToken')?.value;
-  
-  const path = request.nextUrl.pathname;
   const isPublic = publicRoutes.includes(path);
   
   if (!token && !isPublic) {
@@ -23,8 +28,7 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = { 
-    matcher: [
-      '/((?!_next/static|_next/image|favicon.ico).*)',
-    ],
-  }
-  
+  matcher: [
+    '/((?!api|_next/static|_next/image|favicon.ico).*)',
+  ],
+}

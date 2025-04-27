@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useTheme } from '@/hooks/useTheme';
 import { motion, AnimatePresence } from 'framer-motion';
+import Swal from 'sweetalert2';
 import { 
   Mail, 
   Lock, 
@@ -13,7 +14,9 @@ import {
   Loader2,
   User,
   Eye,
-  EyeOff
+  EyeOff,
+  Check,
+  X
 } from 'lucide-react';
 import { register } from '@/api/auth/requests';
 
@@ -29,15 +32,51 @@ const RegisterPage = () => {
   const [mounted, setMounted] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [passwordChecks, setPasswordChecks] = useState({
+    minLength: false,
+    hasNumber: false,
+    hasSpecial: false,
+    hasUpper: false,
+    hasLower: false,
+  });
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
+  const validatePassword = (pass: string) => {
+    setPasswordChecks({
+      minLength: pass.length >= 8,
+      hasNumber: /\d/.test(pass),
+      hasSpecial: /[!@#$%^&*(),.?":{}|<>]/.test(pass),
+      hasUpper: /[A-Z]/.test(pass),
+      hasLower: /[a-z]/.test(pass),
+    });
+  };
+
+  const getPasswordStrength = () => {
+    const checks = Object.values(passwordChecks);
+    const trueCount = checks.filter(Boolean).length;
+    if (trueCount === 5) return { strength: 'Strong', color: 'bg-green-500' };
+    if (trueCount >= 3) return { strength: 'Medium', color: 'bg-yellow-500' };
+    return { strength: 'Weak', color: 'bg-red-500' };
+  };
+
+  useEffect(() => {
+    validatePassword(password);
+  }, [password]);
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
     setError('');
+
+    const { strength } = getPasswordStrength();
+    if (strength === 'Weak') {
+      setError('Please create a stronger password');
+      setIsLoading(false);
+      return;
+    }
 
     if (password !== confirmPassword) {
       setError('Passwords do not match');
@@ -47,6 +86,12 @@ const RegisterPage = () => {
 
     try {
       await register({username, email, password});
+      await Swal.fire({
+        title: 'Success!',
+        text: 'Your account has been created successfully',
+        icon: 'success',
+        confirmButtonColor: '#0ea5e9'
+      });
       router.push('/login');
     } catch (err) {
       const error = err as Error;
@@ -202,6 +247,45 @@ const RegisterPage = () => {
                   )}
                 </button>
               </div>
+              
+              {password && (
+                <div className="mt-2 space-y-2">
+                  <div className="flex gap-2">
+                    <div className={`h-1 flex-1 rounded ${getPasswordStrength().color}`}></div>
+                    <span className="text-xs">{getPasswordStrength().strength}</span>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2">
+                    <div className="flex items-center gap-2 text-xs">
+                      {passwordChecks.minLength ? 
+                        <Check className="h-4 w-4 text-green-500" /> : 
+                        <X className="h-4 w-4 text-red-500" />
+                      }
+                      At least 8 characters
+                    </div>
+                    <div className="flex items-center gap-2 text-xs">
+                      {passwordChecks.hasNumber ? 
+                        <Check className="h-4 w-4 text-green-500" /> : 
+                        <X className="h-4 w-4 text-red-500" />
+                      }
+                      Contains number
+                    </div>
+                    <div className="flex items-center gap-2 text-xs">
+                      {passwordChecks.hasSpecial ? 
+                        <Check className="h-4 w-4 text-green-500" /> : 
+                        <X className="h-4 w-4 text-red-500" />
+                      }
+                      Special character
+                    </div>
+                    <div className="flex items-center gap-2 text-xs">
+                      {passwordChecks.hasUpper && passwordChecks.hasLower ? 
+                        <Check className="h-4 w-4 text-green-500" /> : 
+                        <X className="h-4 w-4 text-red-500" />
+                      }
+                      Upper & lowercase
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
 
             <div className="relative">
