@@ -101,6 +101,10 @@ const RegisterPage = () => {
     }
   };
 
+  const isPasswordValid = () => {
+    return Object.values(passwordChecks).every(check => check === true);
+  };
+
   const isDark = theme === 'dark';
 
   return (
@@ -250,9 +254,19 @@ const RegisterPage = () => {
               
               {password && (
                 <div className="mt-2 space-y-2">
-                  <div className="flex gap-2">
-                    <div className={`h-1 flex-1 rounded ${getPasswordStrength().color}`}></div>
-                    <span className="text-xs">{getPasswordStrength().strength}</span>
+                  <div className="flex gap-1 items-center">
+                    {[...Array(5)].map((_, index) => (
+                      <div key={index} className="flex-1 h-1.5">
+                        <div
+                          className={`h-full rounded-full transition-all duration-300 ${
+                            Object.values(passwordChecks).filter(Boolean).length > index
+                              ? getPasswordStrength().color
+                              : isDark ? 'bg-gray-700' : 'bg-gray-200'
+                          }`}
+                        />
+                      </div>
+                    ))}
+                    <span className="text-xs ml-2">{getPasswordStrength().strength}</span>
                   </div>
                   <div className="grid grid-cols-2 gap-2">
                     <div className="flex items-center gap-2 text-xs">
@@ -326,7 +340,7 @@ const RegisterPage = () => {
           <motion.div whileHover={{ scale: isLoading ? 1 : 1.02 }} whileTap={{ scale: isLoading ? 1 : 0.98 }}>
             <button
               type="submit"
-              disabled={isLoading}
+              disabled={isLoading || !isPasswordValid() || password !== confirmPassword}
               className={`
                 group relative w-full flex justify-center py-3 px-4 
                 border border-transparent text-sm font-medium rounded-md 
@@ -335,7 +349,7 @@ const RegisterPage = () => {
                 focus:outline-none focus:ring-2 focus:ring-offset-2 
                 focus:ring-[#0ea5e9] dark:focus:ring-[#38bdf8] 
                 transition-colors cursor-pointer
-                ${isLoading ? 'opacity-70 cursor-not-allowed' : ''}
+                ${(isLoading || !isPasswordValid() || password !== confirmPassword) ? 'opacity-70 cursor-not-allowed' : ''}
               `}
             >
               {isLoading ? (

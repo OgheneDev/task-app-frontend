@@ -13,7 +13,9 @@ import {
   AlertCircle,
   Loader2,
   Eye, 
-  EyeOff
+  EyeOff,
+  Check,
+  X
 } from 'lucide-react';
 
 interface LoginError {
@@ -32,6 +34,13 @@ const LoginPage = () => {
   const [validationErrors, setValidationErrors] = useState({
     email: '',
     password: ''
+  });
+  const [passwordChecks, setPasswordChecks] = useState({
+    minLength: false,
+    hasNumber: false,
+    hasSpecial: false,
+    hasUpper: false,
+    hasLower: false,
   });
 
   // Ensure hydration mismatch is avoided
@@ -61,6 +70,28 @@ const LoginPage = () => {
     return !errors.email && !errors.password;
   };
 
+  const validatePassword = (pass: string) => {
+    setPasswordChecks({
+      minLength: pass.length >= 8,
+      hasNumber: /\d/.test(pass),
+      hasSpecial: /[!@#$%^&*(),.?":{}|<>]/.test(pass),
+      hasUpper: /[A-Z]/.test(pass),
+      hasLower: /[a-z]/.test(pass),
+    });
+  };
+
+  const getPasswordStrength = () => {
+    const checks = Object.values(passwordChecks);
+    const trueCount = checks.filter(Boolean).length;
+    if (trueCount === 5) return { strength: 'Strong', color: 'bg-green-500' };
+    if (trueCount >= 3) return { strength: 'Medium', color: 'bg-yellow-500' };
+    return { strength: 'Weak', color: 'bg-red-500' };
+  };
+
+  useEffect(() => {
+    validatePassword(password);
+  }, [password]);
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError('');
@@ -79,6 +110,11 @@ const LoginPage = () => {
       setError(error.message);
       setIsLoading(false);
     }
+  };
+
+  const allValidationsPass = () => {
+    return email.match(/\S+@\S+\.\S+/) && 
+           Object.values(passwordChecks).every(check => check === true);
   };
 
   const isDark = theme === 'dark';
@@ -212,13 +248,10 @@ const LoginPage = () => {
                 } ${validationErrors.password ? 'border-red-500' : ''} rounded-b-md focus:outline-none focus:z-10 transition-colors`}
                 placeholder="Password"
               />
-              {validationErrors.password && (
-                <p className="text-red-500 text-xs mt-1">{validationErrors.password}</p>
-              )}
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className={`absolute right-3 top-12 ${isDark ? 'text-gray-400' : 'text-gray-500'} hover:text-gray-700 dark:hover:text-gray-300`}
+                className={`absolute right-3 top-1/2 -translate-y-1/2 ${isDark ? 'text-gray-400' : 'text-gray-500'} hover:text-gray-700 dark:hover:text-gray-300`}
               >
                 {showPassword ? (
                   <EyeOff className="h-5 w-5" />
@@ -227,6 +260,58 @@ const LoginPage = () => {
                 )}
               </button>
             </div>
+            {validationErrors.password && (
+              <p className="text-red-500 text-xs mt-1">{validationErrors.password}</p>
+            )}
+            
+            {password && (
+              <div className="mt-2 space-y-2">
+                <div className="flex gap-1 items-center">
+                  {[...Array(5)].map((_, index) => (
+                    <div key={index} className="flex-1 h-1.5">
+                      <div
+                        className={`h-full rounded-full transition-all duration-300 ${
+                          Object.values(passwordChecks).filter(Boolean).length > index
+                            ? getPasswordStrength().color
+                            : isDark ? 'bg-gray-700' : 'bg-gray-200'
+                        }`}
+                      />
+                    </div>
+                  ))}
+                  <span className="text-xs ml-2">{getPasswordStrength().strength}</span>
+                </div>
+                <div className="grid grid-cols-2 gap-2">
+                  <div className="flex items-center gap-2 text-xs">
+                    {passwordChecks.minLength ? 
+                      <Check className="h-4 w-4 text-green-500" /> : 
+                      <X className="h-4 w-4 text-red-500" />
+                    }
+                    At least 8 characters
+                  </div>
+                  <div className="flex items-center gap-2 text-xs">
+                    {passwordChecks.hasNumber ? 
+                      <Check className="h-4 w-4 text-green-500" /> : 
+                      <X className="h-4 w-4 text-red-500" />
+                    }
+                    Contains number
+                  </div>
+                  <div className="flex items-center gap-2 text-xs">
+                    {passwordChecks.hasSpecial ? 
+                      <Check className="h-4 w-4 text-green-500" /> : 
+                      <X className="h-4 w-4 text-red-500" />
+                    }
+                    Special character
+                  </div>
+                  <div className="flex items-center gap-2 text-xs">
+                    {passwordChecks.hasUpper && passwordChecks.hasLower ? 
+                      <Check className="h-4 w-4 text-green-500" /> : 
+                      <X className="h-4 w-4 text-red-500" />
+                    }
+                    Upper & lowercase
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
 
           <div className="flex items-center justify-end">
@@ -237,10 +322,10 @@ const LoginPage = () => {
             </div>
           </div>
 
-          <motion.div whileHover={{ scale: isLoading ? 1 : 1.02 }} whileTap={{ scale: isLoading ? 1 : 0.98 }}>
+          <motion.div whileHover={{ scale: isLoading || !allValidationsPass() ? 1 : 1.02 }} whileTap={{ scale: isLoading || !allValidationsPass() ? 1 : 0.98 }}>
             <button
               type="submit"
-              disabled={isLoading}
+              disabled={isLoading || !allValidationsPass()}
               className={`
                 group relative w-full flex justify-center py-3 px-4 
                 border border-transparent text-sm font-medium rounded-md 
@@ -249,7 +334,7 @@ const LoginPage = () => {
                 focus:outline-none focus:ring-2 focus:ring-offset-2 
                 focus:ring-[#0ea5e9] dark:focus:ring-[#38bdf8] 
                 transition-colors cursor-pointer
-                ${isLoading ? 'opacity-70 cursor-not-allowed' : ''}
+                ${(isLoading || !allValidationsPass()) ? 'opacity-70 cursor-not-allowed' : ''}
               `}
             >
               {isLoading ? (

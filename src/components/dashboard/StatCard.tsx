@@ -21,7 +21,7 @@ export const StatCard = ({ stat, index, isDark }: StatCardProps) => {
           <p className={`${isDark ? 'text-gray-400' : 'text-gray-500'} text-sm font-medium`}>
             {stat.title}
           </p>
-          <p className="text-3xl font-bold tracking-tight">{stat.value}</p>
+          <p className={`text-3xl font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>{stat.value}</p>
         </div>
         <div className={`p-3 rounded-xl ${stat.color.replace('bg-', 'bg-opacity-')} bg-opacity-20`}>
           <stat.Icon className={`w-6 h-6 ${stat.color.replace('bg-', 'text-')} text-opacity-100`} />

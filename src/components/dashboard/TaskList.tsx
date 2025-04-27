@@ -18,7 +18,7 @@ export const TaskList = ({ tasks, isDark }: TaskListProps) => {
       className={`rounded-xl shadow-lg ${isDark ? 'bg-gray-800' : 'bg-white'} border ${isDark ? 'border-gray-700' : 'border-gray-100'}`}
     >
       <div className="p-6 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
-        <h2 className="text-2xl font-semibold">Recent Tasks</h2>
+        <h2 className={`text-2xl font-semibold ${isDark ? 'text-white' : 'text-gray-900'}`}>Recent Tasks</h2>
         <Link
          href='/tasks'
         >

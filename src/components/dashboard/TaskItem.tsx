@@ -15,7 +15,7 @@ const TaskItem = ({ task, isDark }:  TaskItemProps) => {
       >
         <div className="flex justify-between items-start gap-4">
           <div className="space-y-2">
-            <h3 className="text-lg font-medium leading-6">{task.title}</h3>
+            <h3 className={`text-lg font-medium leading-6 ${isDark ? 'text-white' : 'text-gray-900'}`}>{task.title}</h3>
             <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'} line-clamp-2`}>
               {task.description}
             </p>
