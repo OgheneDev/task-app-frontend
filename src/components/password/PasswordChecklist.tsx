@@ -1,16 +1,14 @@
 import { Check, X } from 'lucide-react';
 
-interface PasswordChecklistProps {
-  passwordChecks: {
-    minLength: boolean;
-    hasNumber: boolean;
-    hasSpecial: boolean;
-    hasUpper: boolean;
-    hasLower: boolean;
-  };
+interface PasswordChecks {
+  minLength: boolean;
+  hasNumber: boolean;
+  hasSpecial: boolean;
+  hasUpper: boolean;
+  hasLower: boolean;
 }
 
-export const PasswordChecklist = ({ passwordChecks }: PasswordChecklistProps) => {
+const PasswordChecklist = ({ passwordChecks }: { passwordChecks: PasswordChecks }) => {
   return (
     <div className="grid grid-cols-2 gap-2">
       <div className="flex items-center gap-2 text-xs">
@@ -44,3 +42,5 @@ export const PasswordChecklist = ({ passwordChecks }: PasswordChecklistProps) =>
     </div>
   );
 };
+
+export default PasswordChecklist;

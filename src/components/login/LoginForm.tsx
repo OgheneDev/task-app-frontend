@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -14,8 +14,6 @@ import {
   Eye, 
   EyeOff,
 } from 'lucide-react';
-import { PasswordStrengthIndicator } from './PasswordStrengthIndicator';
-import { PasswordChecklist } from './PasswordChecklist';
 
 export const LoginForm = () => {
   const router = useRouter();
@@ -28,13 +26,6 @@ export const LoginForm = () => {
   const [validationErrors, setValidationErrors] = useState({
     email: '',
     password: ''
-  });
-  const [passwordChecks, setPasswordChecks] = useState({
-    minLength: false,
-    hasNumber: false,
-    hasSpecial: false,
-    hasUpper: false,
-    hasLower: false,
   });
 
   const isDark = theme === 'dark';
@@ -53,35 +44,11 @@ export const LoginForm = () => {
 
     if (!password) {
       errors.password = 'Password is required';
-    } else if (password.length < 6) {
-      errors.password = 'Password must be at least 6 characters';
     }
 
     setValidationErrors(errors);
     return !errors.email && !errors.password;
   };
-
-  const validatePassword = (pass: string) => {
-    setPasswordChecks({
-      minLength: pass.length >= 8,
-      hasNumber: /\d/.test(pass),
-      hasSpecial: /[!@#$%^&*(),.?":{}|<>]/.test(pass),
-      hasUpper: /[A-Z]/.test(pass),
-      hasLower: /[a-z]/.test(pass),
-    });
-  };
-
-  const getPasswordStrength = () => {
-    const checks = Object.values(passwordChecks);
-    const trueCount = checks.filter(Boolean).length;
-    if (trueCount === 5) return { strength: 'Strong', color: 'bg-green-500' };
-    if (trueCount >= 3) return { strength: 'Medium', color: 'bg-yellow-500' };
-    return { strength: 'Weak', color: 'bg-red-500' };
-  };
-
-  useEffect(() => {
-    validatePassword(password);
-  }, [password]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -108,9 +75,8 @@ export const LoginForm = () => {
     }
   };
 
-  const allValidationsPass = () => {
-    return email.match(/\S+@\S+\.\S+/) && 
-           Object.values(passwordChecks).every(check => check === true);
+  const isFormValid = () => {
+    return email.match(/\S+@\S+\.\S+/) && password.length > 0;
   };
 
   return (
@@ -213,16 +179,6 @@ export const LoginForm = () => {
           {validationErrors.password && (
             <p className="text-red-500 text-xs mt-1">{validationErrors.password}</p>
           )}
-          
-          {password && (
-            <div className="mt-2 space-y-2">
-              <PasswordStrengthIndicator 
-                passwordChecks={passwordChecks}
-                getPasswordStrength={getPasswordStrength}
-              />
-              <PasswordChecklist passwordChecks={passwordChecks} />
-            </div>
-          )}
         </div>
 
         <div className="flex items-center justify-end">
@@ -233,10 +189,10 @@ export const LoginForm = () => {
           </div>
         </div>
 
-        <motion.div whileHover={{ scale: isLoading || !allValidationsPass() ? 1 : 1.02 }} whileTap={{ scale: isLoading || !allValidationsPass() ? 1 : 0.98 }}>
+        <motion.div whileHover={{ scale: isLoading || !isFormValid() ? 1 : 1.02 }} whileTap={{ scale: isLoading || !isFormValid() ? 1 : 0.98 }}>
           <button
             type="submit"
-            disabled={isLoading || !allValidationsPass()}
+            disabled={isLoading || !isFormValid()}
             className={`
               group relative w-full flex justify-center py-3 px-4 
               border border-transparent text-sm font-medium rounded-md 
@@ -245,7 +201,7 @@ export const LoginForm = () => {
               focus:outline-none focus:ring-2 focus:ring-offset-2 
               focus:ring-[#0ea5e9] dark:focus:ring-[#38bdf8] 
               transition-colors cursor-pointer
-              ${(isLoading || !allValidationsPass()) ? 'opacity-70 cursor-not-allowed' : ''}
+              ${(isLoading || !isFormValid()) ? 'opacity-70 cursor-not-allowed' : ''}
             `}
           >
             {isLoading ? (
