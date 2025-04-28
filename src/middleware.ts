@@ -16,11 +16,15 @@ export function middleware(request: NextRequest) {
   const token = request.cookies.get('frontendToken')?.value;
   const isPublic = publicRoutes.includes(path);
   
+  // For non-public routes, ensure token exists
   if (!token && !isPublic) {
-    return NextResponse.redirect(new URL('/login', request.url));
+    const url = new URL('/login', request.url);
+    url.searchParams.set('from', path); // Optional: save intended destination
+    return NextResponse.redirect(url);
   }
   
-  if (token && (path === '/login' || path === '/register')) {
+  // Prevent authenticated users from accessing auth pages
+  if (token && isPublic && path !== '/') {
     return NextResponse.redirect(new URL('/dashboard', request.url));
   }
   

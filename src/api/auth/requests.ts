@@ -18,21 +18,23 @@ export const login = async ({ email, password }: LoginCredentials): Promise<void
       '/api/auth/login',
       { email, password }
     );
-        
-    if (response.status === 200) {
+
+    // Only proceed if we have a valid token
+    if (response.data?.token) {
       const { token } = response.data;
+      // Set token in localStorage for axios
       tokenUtils.setToken(token);
-      document.cookie = `frontendToken=${token}; path=/; max-age=${60*60*24*7}`;
+      // Set cookie for middleware auth
+      document.cookie = `frontendToken=${token}; path=/; max-age=${60*60*24*7}; SameSite=Lax`;
       return;
     }
-    throw new Error('Login failed');
+    throw new Error('Invalid response from server');
   } catch (error) {
     const axiosError = error as AxiosError<ErrorResponse>;
-    // Check for both error and message properties
-    const serverMessage = axiosError.response?.data?.error || 
-                         axiosError.response?.data?.message || 
-                         axiosError.message;
-    throw new Error(serverMessage);
+    if (axiosError.response?.status === 401) {
+      throw new Error('Invalid email or password');
+    }
+    throw new Error(axiosError.response?.data?.message || 'Login failed');
   }
 }
   
