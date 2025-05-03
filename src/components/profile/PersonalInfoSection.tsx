@@ -145,7 +145,7 @@ const PersonalInfoSection = ({ isDark }: PersonalInfoSectionProps) => {
                         className={`pl-12 w-full p-4 rounded-xl border outline-none transition-all duration-300 
                             ${isDark 
                                 ? 'bg-gray-800/50 backdrop-blur-sm hover:bg-gray-800/70 border-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-white placeholder-gray-500'
-                                : 'bg-white/50 backdrop-blur-sm hover:bg-white/70 border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent'
+                                : 'bg-white/50 backdrop-blur-sm hover:bg-white/70 border-gray-200 focus:ring-2 text-gray-700 focus:ring-blue-500 focus:border-transparent'
                             }`}
                     />
                 </div>
@@ -159,13 +159,13 @@ const PersonalInfoSection = ({ isDark }: PersonalInfoSectionProps) => {
                         className={`pl-12 w-full p-4 rounded-xl border outline-none cursor-not-allowed
                             ${isDark 
                                 ? 'bg-gray-900 border-gray-700 text-gray-400'
-                                : 'bg-gray-50 border-gray-200 text-gray-500'
+                                : 'bg-gray-50 border-gray-200 text-gray-700'
                             }`}
                     />
                     <span className={`text-xs ${isDark ? 'text-gray-500' : 'text-gray-400'} mt-1 ml-4`}>Email cannot be changed</span>
                 </div>
                 <div className="relative group">
-                    <AlignLeft className={`absolute left-4 top-6 h-5 w-5 ${isDark ? 'text-gray-500' : 'text-gray-400'} transition-colors group-focus-within:text-blue-500`} />
+                    <AlignLeft className={`absolute left-4 top-5 h-5 w-5 ${isDark ? 'text-gray-500' : 'text-gray-400'} transition-colors group-focus-within:text-blue-500`} />
                     <textarea 
                         placeholder="Bio" 
                         rows={4}
@@ -174,7 +174,7 @@ const PersonalInfoSection = ({ isDark }: PersonalInfoSectionProps) => {
                         className={`pl-12 w-full p-4 rounded-xl border outline-none transition-all duration-300 resize-none
                             ${isDark 
                                 ? 'bg-gray-800/50 backdrop-blur-sm hover:bg-gray-800/70 border-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-white placeholder-gray-500'
-                                : 'bg-white/50 backdrop-blur-sm hover:bg-white/70 border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent'
+                                : 'bg-white/50 backdrop-blur-sm hover:bg-white/70 text-gray-700 border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent'
                             }`}
                     />
                 </div>

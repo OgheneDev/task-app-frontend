@@ -75,7 +75,7 @@ const ActivitySection = ({ isDark }: ActivitySectionProps) => {
       animate="show"
       className={`rounded-xl p-6 shadow-sm ${isDark ? 'bg-gray-800 text-white' : 'bg-white'}`}
     >
-      <h3 className={`text-xl font-semibold mb-6 ${isDark ? 'text-white' : ''}`}>Activity Overview</h3>
+      <h3 className={`text-xl font-semibold mb-6 ${isDark ? 'text-white' : 'text-gray-700'}`}>Activity Overview</h3>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <motion.div
           variants={item}
@@ -86,7 +86,7 @@ const ActivitySection = ({ isDark }: ActivitySectionProps) => {
           </div>
           <div>
             <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Completed Tasks</p>
-            <p className="text-xl font-semibold">{taskStats.completed}</p>
+            <p className={`text-xl font-semibold ${isDark ? 'text-white' : 'text-gray-700'}`}>{taskStats.completed}</p>
           </div>
         </motion.div>
         
@@ -99,7 +99,7 @@ const ActivitySection = ({ isDark }: ActivitySectionProps) => {
           </div>
           <div>
             <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Total Tasks</p>
-            <p className="text-xl font-semibold">{taskStats.total}</p>
+            <p className={`text-xl font-semibold ${isDark ? 'text-white' : 'text-gray-700'}`}>{taskStats.total}</p>
           </div>
         </motion.div>
         
@@ -112,7 +112,7 @@ const ActivitySection = ({ isDark }: ActivitySectionProps) => {
           </div>
           <div>
             <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>Pending Tasks</p>
-            <p className="text-xl font-semibold">{taskStats.pending}</p>
+            <p className={`text-xl font-semibold ${isDark ? 'text-white' : 'text-gray-700'}`}>{taskStats.pending}</p>
           </div>
         </motion.div>
       </div>
