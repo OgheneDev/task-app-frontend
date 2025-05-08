@@ -1,5 +1,5 @@
-'use client'
-import { useState, useEffect } from 'react';
+'use client';
+import { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useTheme } from '@/hooks/useTheme';
@@ -18,7 +18,8 @@ interface PasswordChecks {
   hasLower: boolean;
 }
 
-const ResetPasswordPage = () => {
+// Create a component to handle useSearchParams
+const ResetPasswordContent = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { theme } = useTheme();
@@ -243,6 +244,15 @@ const ResetPasswordPage = () => {
         </motion.form>
       </motion.div>
     </div>
+  );
+};
+
+// Main component with Suspense boundary
+const ResetPasswordPage = () => {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <ResetPasswordContent />
+    </Suspense>
   );
 };
 
