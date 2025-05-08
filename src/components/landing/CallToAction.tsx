@@ -20,7 +20,7 @@ const CallToAction = () => {
             Join thousands of users who are already managing their tasks more effectively.
           </p>
           <Link 
-            href="/dashboard"
+            href="/register"
             className="bg-white text-blue-600 hover:bg-blue-50 px-8 py-3 rounded-lg font-medium transition-colors inline-block"
           >
             Start Managing Tasks

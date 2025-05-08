@@ -54,7 +54,7 @@ const Features = () => {
               <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
               <p className="text-gray-600 dark:text-gray-300 mb-6">{feature.description}</p>
               <Link 
-              href="/dashboard"
+              href="/register"
               className="bg-gradient-to-r from-blue-500 to-purple-600 px-5 py-2 rounded-lg text-white"
             >
               Get Started

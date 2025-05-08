@@ -21,7 +21,7 @@ const Hero = () => {
           </p>
           <div className="flex gap-4 justify-center">
             <Link 
-              href="/dashboard"
+              href="/register"
               className="bg-blue-600 text-sm hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-medium transition-colors"
             >
               Get Started
