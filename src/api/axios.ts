@@ -1,4 +1,10 @@
 import axios from "axios";
+const PUBLIC_ROUTES = [
+    '/api/auth/login',
+    '/api/auth/register',
+    '/api/auth/forgotpassword',
+    '/api/auth/resetpassword'
+];
 
 // Token management utilities
 const tokenUtils = {
@@ -40,8 +46,11 @@ axiosInstance.interceptors.request.use(
         const token = tokenUtils.getToken();
         console.log('Token from localStorage:', token); // Debug token
 
-        // Don't redirect if we're trying to login
-        if (!token && !config.url?.includes('/login')) {
+        // Check if the current route is public
+        const isPublicRoute = PUBLIC_ROUTES.some(route => config.url?.includes(route));
+
+        // Only check for token if it's not a public route
+        if (!token && !isPublicRoute) {
             console.warn('No authentication token found');
             window.location.href = '/login';
         }

@@ -6,6 +6,7 @@ import { useTheme } from '@/hooks/useTheme';
 import { motion, AnimatePresence } from 'framer-motion';
 import { forgotPassword } from '@/api/auth/requests';
 import { Mail, ArrowLeft, AlertCircle, Loader2 } from 'lucide-react';
+import Swal from 'sweetalert2';
 
 const ForgotPasswordPage = () => {
   const router = useRouter();
@@ -26,7 +27,13 @@ const ForgotPasswordPage = () => {
 
     try {
       await forgotPassword({ email });
-      router.push('/login?reset=requested');
+      //router.push('/login?reset=requested');
+      await Swal.fire({
+        title: 'Success!',
+        text: 'Password reset link sent! Please check your email.',
+        icon: 'success',
+        confirmButtonColor: '#0ea5e9'
+      });
     } catch (err) {
       const error = err as Error;
       setError(error.message);

@@ -8,7 +8,8 @@ import {
   ForgotPasswordCredentials,
   UpdatePasswordCredentials,
   UpdateDetailsCredentials,
-  DeleteAccountCredentials
+  DeleteAccountCredentials,
+  ResetPasswordCredentials
 } from "@/types/types";
 import Cookies from 'js-cookie'
 
@@ -61,16 +62,33 @@ export const forgotPassword = async ({ email }: ForgotPasswordCredentials): Prom
     try {
       const response = await axiosInstance.post(
         '/api/auth/forgotpassword',
-        { email }
+        { email } 
       );
       
       if (response.status === 200) {
-        window.location.href = "/register"
+        return;
       }
     } catch (error) {
       const axiosError = error as AxiosError<ErrorResponse>;
       throw new Error(axiosError.response?.data?.message || 'Forgot Password failed');
     }
+}
+
+export const resetPassword = async (resetToken: string, { password }: ResetPasswordCredentials): Promise<void> => {
+  try {
+      const response = await axiosInstance.put(
+          `/api/auth/resetpassword/${resetToken}`,
+          { password }
+      );
+
+      if (response.status === 200) {
+          // Redirect to login page after successful password reset
+          window.location.href = '/login';
+      }
+  } catch (error) {
+      const axiosError = error as AxiosError<ErrorResponse>;
+      throw new Error(axiosError.response?.data?.message || 'Password reset failed');
+  }
 }
 
 export const getMe = async () => {
