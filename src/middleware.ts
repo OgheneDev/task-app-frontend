@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
 // Routes user can access without being logged in
-const publicRoutes = ['/', '/login', '/register', '/forgot-password', 'reset-password']
+const publicRoutes = ['/', '/login', '/register', '/forgot-password', '/reset-password']
 
 export function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;

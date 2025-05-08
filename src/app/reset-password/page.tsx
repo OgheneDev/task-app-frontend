@@ -39,6 +39,11 @@ const ResetPasswordPage = () => {
     setMounted(true);
   }, []);
 
+  // Add early return if not mounted
+  if (!mounted) {
+    return null;
+  }
+
   const validatePassword = (pass: string) => {
     setPasswordChecks({
       minLength: pass.length >= 8,
