@@ -18,7 +18,6 @@ interface PasswordChecks {
   hasLower: boolean;
 }
 
-// Create a component to handle useSearchParams
 const ResetPasswordContent = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -26,7 +25,6 @@ const ResetPasswordContent = () => {
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
-  const [mounted, setMounted] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [passwordChecks, setPasswordChecks] = useState<PasswordChecks>({
     minLength: false,
@@ -36,16 +34,16 @@ const ResetPasswordContent = () => {
     hasLower: false,
   });
 
+  // Track mount status for cleanup
   useEffect(() => {
-    setMounted(true);
+    let isMounted = true;
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
-  // Add early return if not mounted
-  if (!mounted) {
-    return null;
-  }
-
-  const validatePassword = (pass: string) => {
+  const validatePassword = (pass: string, isMounted: boolean) => {
+    if (!isMounted) return;
     setPasswordChecks({
       minLength: pass.length >= 8,
       hasNumber: /\d/.test(pass),
@@ -56,7 +54,11 @@ const ResetPasswordContent = () => {
   };
 
   useEffect(() => {
-    validatePassword(password);
+    let isMounted = true;
+    validatePassword(password, isMounted);
+    return () => {
+      isMounted = false;
+    };
   }, [password]);
 
   const isPasswordValid = () => {
@@ -64,40 +66,49 @@ const ResetPasswordContent = () => {
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setIsLoading(true);
-    setError('');
+  e.preventDefault();
+  let isMounted = true;
+  setIsLoading(true);
+  setError('');
 
-    if (!isPasswordValid()) {
+  if (!isPasswordValid()) {
+    if (isMounted) {
       setError('Please create a stronger password');
       setIsLoading(false);
-      return;
     }
+    return;
+  }
 
-    const resetToken = searchParams.get('token');
-    console.log('Reset Token:', resetToken);
-    if (!resetToken) {
+  const resetToken = searchParams.get('token');
+  if (!resetToken) {
+    if (isMounted) {
       setError('Reset token is missing');
       setIsLoading(false);
-      return;
+      router.push('/login?error=missing-token');
     }
+    return;
+  }
 
-    try {
-      await resetPassword(resetToken, { password });
-      await Swal.fire({
-        title: 'Success!',
-        text: 'Password has been reset successfully!',
-        icon: 'success',
-        confirmButtonColor: '#0ea5e9'
-      });
-      router.push('/login');
-    } catch (err) {
+  try {
+    await resetPassword(resetToken, { password });
+    await Swal.fire({
+      title: 'Success!',
+      text: 'Password has been reset successfully!',
+      icon: 'success',
+      confirmButtonColor: '#0ea5e9',
+    });
+    router.push('/login');  // Add explicit navigation after success
+  } catch (err) {
+    if (isMounted) {
       const error = err as Error;
       setError(error.message);
-    } finally {
+    }
+  } finally {
+    if (isMounted) {
       setIsLoading(false);
     }
-  };
+  }
+};
 
   const isDark = theme === 'dark';
 
@@ -248,7 +259,6 @@ const ResetPasswordContent = () => {
   );
 };
 
-// Main component with Suspense boundary
 const ResetPasswordPage = () => {
   return (
     <Suspense fallback={<div>Loading...</div>}>
