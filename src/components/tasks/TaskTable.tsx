@@ -258,7 +258,7 @@ const TaskTable = ({ tasks, onDelete, onEdit }: TaskTableProps) => {
             <button
               onClick={() => handlePageChange(currentPage - 1)}
               disabled={currentPage === 1}
-              className={`p-2 rounded-lg ${isDark ? 'hover:bg-gray-800' : 'hover:bg-gray-100'} 
+              className={`p-2 rounded-lg cursor-pointer ${isDark ? 'hover:bg-gray-800' : 'hover:bg-gray-100'} 
                 ${currentPage === 1 ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
             >
               <ChevronLeft className={`h-5 w-5 ${isDark ? 'text-gray-400' : 'text-gray-600'}`} />
@@ -269,7 +269,7 @@ const TaskTable = ({ tasks, onDelete, onEdit }: TaskTableProps) => {
                 <button
                   key={i + 1}
                   onClick={() => handlePageChange(i + 1)}
-                  className={`px-3 py-1 rounded-lg transition-colors ${
+                  className={`px-3 py-1 rounded-lg transition-colors cursor-pointer ${
                     currentPage === i + 1
                       ? (isDark ? 'bg-gray-700 text-white' : 'bg-gray-200 text-gray-900')
                       : (isDark ? 'text-gray-400 hover:bg-gray-800' : 'text-gray-600 hover:bg-gray-100')
@@ -283,7 +283,7 @@ const TaskTable = ({ tasks, onDelete, onEdit }: TaskTableProps) => {
             <button
               onClick={() => handlePageChange(currentPage + 1)}
               disabled={currentPage === totalPages}
-              className={`p-2 rounded-lg ${isDark ? 'hover:bg-gray-800' : 'hover:bg-gray-100'} 
+              className={`p-2 rounded-lg cursor-pointer ${isDark ? 'hover:bg-gray-800' : 'hover:bg-gray-100'} 
                 ${currentPage === totalPages ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
             >
               <ChevronRight className={`h-5 w-5 ${isDark ? 'text-gray-400' : 'text-gray-600'}`} />

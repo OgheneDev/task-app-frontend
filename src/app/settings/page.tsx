@@ -314,7 +314,7 @@ const SettingsPage = () => {
                   whileTap={{ scale: 0.98 }}
                   onClick={handleDeleteAccount}
                   disabled={deleting}
-                  className="flex-1 flex items-center justify-center gap-2 p-4 rounded-xl bg-gradient-to-r from-red-500 to-red-600 text-white font-medium shadow-lg hover:shadow-red-500/25 transition-all duration-300 disabled:opacity-70 disabled:cursor-not-allowed"
+                  className="flex-1 cursor-pointer flex items-center justify-center gap-2 p-4 rounded-xl bg-gradient-to-r from-red-500 to-red-600 text-white font-medium shadow-lg hover:shadow-red-500/25 transition-all duration-300 disabled:opacity-70 disabled:cursor-not-allowed"
                 >
                   {deleting ? (
                     <>

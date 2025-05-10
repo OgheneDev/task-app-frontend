@@ -177,7 +177,7 @@ const CreateTaskModal: React.FC<CreateTaskModalProps> = ({
               </h2>
               <button
                 onClick={onClose}
-                className={`p-2 rounded-full transition-colors ${
+                className={`p-2 rounded-full transition-colors cursor-pointer ${
                   isDark ? 'hover:bg-gray-800 text-gray-300' : 'hover:bg-gray-100 text-gray-700'
                 }`}
               >
