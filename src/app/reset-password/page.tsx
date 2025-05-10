@@ -75,6 +75,7 @@ const ResetPasswordContent = () => {
     }
 
     const resetToken = searchParams.get('token');
+    console.log('Reset Token:', resetToken);
     if (!resetToken) {
       setError('Reset token is missing');
       setIsLoading(false);
