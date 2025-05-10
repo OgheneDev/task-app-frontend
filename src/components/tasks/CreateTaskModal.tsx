@@ -21,6 +21,17 @@ const CreateTaskModal: React.FC<CreateTaskModalProps> = ({
   initialData, 
   isEditing = false 
 }) => {
+  const categories = [
+    'Work',
+    'Personal',
+    'Shopping',
+    'Health',
+    'Education',
+    'Finance',
+    'Home',
+    'Other'
+  ];
+
   const [formData, setFormData] = useState<FormData>({
     title: '',
     description: '',
@@ -314,15 +325,20 @@ const CreateTaskModal: React.FC<CreateTaskModalProps> = ({
                     <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                       <Tag size={16} className="text-gray-400" />
                     </div>
-                    <input
-                      type="text"
+                    <select
                       id="category"
                       name="category"
-                      placeholder="Enter a category"
                       value={formData.category}
                       onChange={handleChange}
                       className={`${inputClassName} pl-10`}
-                    />
+                    >
+                      <option value="">Select a category</option>
+                      {categories.map((category) => (
+                        <option key={category} value={category.toLowerCase()}>
+                          {category}
+                        </option>
+                      ))}
+                    </select>
                   </div>
                 </div>
 
