@@ -259,9 +259,35 @@ const ResetPasswordContent = () => {
   );
 };
 
+const LoadingSkeleton = () => {
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
+
+  return (
+    <div className={`min-h-screen flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8 transition-colors duration-300 ${isDark ? 'bg-gray-900 text-gray-100' : 'bg-gray-50 text-gray-900'}`}>
+      <div className="max-w-md w-full space-y-8">
+        <div className="flex flex-col items-center">
+          <div className={`h-16 w-16 rounded-full ${isDark ? 'bg-gray-800' : 'bg-gray-200'} animate-pulse`} />
+          <div className={`mt-6 h-8 w-48 ${isDark ? 'bg-gray-800' : 'bg-gray-200'} rounded animate-pulse`} />
+          <div className={`mt-2 h-4 w-32 ${isDark ? 'bg-gray-800' : 'bg-gray-200'} rounded animate-pulse`} />
+        </div>
+        
+        <div className={`mt-8 rounded-md shadow-sm p-4 ${isDark ? 'bg-gray-800' : 'bg-gray-100'}`}>
+          <div className="space-y-3">
+            <div className={`h-4 w-24 ${isDark ? 'bg-gray-700' : 'bg-gray-200'} rounded animate-pulse`} />
+            <div className={`h-12 w-full ${isDark ? 'bg-gray-700' : 'bg-gray-200'} rounded animate-pulse`} />
+          </div>
+        </div>
+
+        <div className={`h-10 w-full ${isDark ? 'bg-gray-800' : 'bg-gray-200'} rounded animate-pulse mt-6`} />
+      </div>
+    </div>
+  );
+};
+
 const ResetPasswordPage = () => {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<LoadingSkeleton />}>
       <ResetPasswordContent />
     </Suspense>
   );
