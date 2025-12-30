@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion';
+import { motion, easeOut } from 'framer-motion';
 import { StatCardProps } from '@/types/analytics';
 import { useTheme } from '@/hooks/useTheme';
 
@@ -10,7 +10,7 @@ const fadeInUpVariants = {
     transition: {
       delay: custom * 0.1,
       duration: 0.5,
-      ease: "easeOut"
+      ease: easeOut
     }
   })
 };

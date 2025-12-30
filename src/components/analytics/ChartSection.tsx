@@ -38,10 +38,9 @@ const barChartVariants = {
     y: 0,
     opacity: 1,
     transition: {
-      type: "spring",
+      type: "spring" as const,
       stiffness: 80,
-      damping: 12,
-      duration: 0.8
+      damping: 12
     }
   }
 };
@@ -53,10 +52,9 @@ const doughnutChartVariants = {
     opacity: 1,
     scale: 1,
     transition: {
-      type: "spring",
+      type: "spring" as const,
       stiffness: 60,
-      damping: 11,
-      duration: 1.2
+      damping: 11
     }
   }
 };
