@@ -112,8 +112,7 @@ const TaskTable = ({ tasks, onDelete, onEdit }: TaskTableProps) => {
       y: 0,
       transition: { 
         delay: i * 0.05,
-        duration: 0.3,
-        ease: "easeOut" 
+        duration: 0.3
       }
     })
   };
