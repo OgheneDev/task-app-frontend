@@ -1,23 +1,22 @@
-'use client';
-import React, { useState, useEffect } from 'react';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { motion, AnimatePresence } from 'framer-motion';
-import Swal from 'sweetalert2';
-import { 
-  Mail, 
-  Lock, 
-  UserPlus, 
+"use client";
+import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { motion, AnimatePresence } from "framer-motion";
+import Swal from "sweetalert2";
+import {
+  Mail,
+  Lock,
+  UserPlus,
   LogIn,
   AlertCircle,
   Loader2,
   User,
   Eye,
   EyeOff,
-} from 'lucide-react';
-import { register } from '@/api/auth/requests';
-import PasswordStrength from '../password/PasswordStrength';
-import PasswordChecklist from '../password/PasswordChecklist';
+} from "lucide-react";
+import PasswordStrength from "../password/PasswordStrength";
+import PasswordChecklist from "../password/PasswordChecklist";
+import { useAuthStore } from "@/stores/useAuthStore";
 
 interface PasswordChecks {
   minLength: boolean;
@@ -29,12 +28,12 @@ interface PasswordChecks {
 
 export const RegisterForm = ({ isDark }: { isDark: boolean }) => {
   const router = useRouter();
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
+  const { signup, isSigningUp } = useAuthStore();
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [passwordChecks, setPasswordChecks] = useState<PasswordChecks>({
@@ -61,45 +60,40 @@ export const RegisterForm = ({ isDark }: { isDark: boolean }) => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setIsLoading(true);
-    setError('');
+    setError("");
 
     if (!isPasswordValid()) {
-      setError('Please create a stronger password');
-      setIsLoading(false);
+      setError("Please create a stronger password");
       return;
     }
 
     if (password !== confirmPassword) {
-      setError('Passwords do not match');
-      setIsLoading(false);
+      setError("Passwords do not match");
       return;
     }
 
     try {
-      await register({username, email, password});
+      await signup({ username, email, password });
       await Swal.fire({
-        title: 'Success!',
-        text: 'Your account has been created successfully',
-        icon: 'success',
-        confirmButtonColor: '#0ea5e9'
+        title: "Success!",
+        text: "Your account has been created successfully",
+        icon: "success",
+        confirmButtonColor: "#0ea5e9",
       });
-      router.push('/login');
+      router.push("/login");
     } catch (err) {
       const error = err as Error;
       setError(error.message);
-    } finally {
-      setIsLoading(false);
     }
   };
 
   const isPasswordValid = () => {
-    return Object.values(passwordChecks).every(check => check === true);
+    return Object.values(passwordChecks).every((check) => check === true);
   };
 
   return (
-    <motion.form 
-      className="mt-8 space-y-6" 
+    <motion.form
+      className="mt-8 space-y-6"
       onSubmit={handleSubmit}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
@@ -107,19 +101,27 @@ export const RegisterForm = ({ isDark }: { isDark: boolean }) => {
     >
       <AnimatePresence>
         {error && (
-          <motion.div 
-            className={`rounded-md ${isDark ? 'bg-red-900/30' : 'bg-red-50'} p-4`}
+          <motion.div
+            className={`rounded-md ${
+              isDark ? "bg-red-900/30" : "bg-red-50"
+            } p-4`}
             initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
+            animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.3 }}
           >
             <div className="flex">
-              <div className="flex-shrink-0">
+              <div className="shrink-0">
                 <AlertCircle className="h-5 w-5 text-red-400" />
               </div>
               <div className="ml-3">
-                <h3 className={`text-sm font-medium ${isDark ? 'text-red-200' : 'text-red-800'}`}>{error}</h3>
+                <h3
+                  className={`text-sm font-medium ${
+                    isDark ? "text-red-200" : "text-red-800"
+                  }`}
+                >
+                  {error}
+                </h3>
               </div>
             </div>
           </motion.div>
@@ -130,8 +132,14 @@ export const RegisterForm = ({ isDark }: { isDark: boolean }) => {
         {/* Form fields implementation... */}
         <div className="relative">
           <div className="flex gap-2 items-center mb-3">
-            <User className={`h-5 w-5 ${isDark ? 'text-gray-400' : 'text-gray-500'}`} />
-            <label htmlFor="username" className="text-sm">Username</label>
+            <User
+              className={`h-5 w-5 ${
+                isDark ? "text-gray-400" : "text-gray-500"
+              }`}
+            />
+            <label htmlFor="username" className="text-sm">
+              Username
+            </label>
           </div>
           <input
             id="username"
@@ -141,9 +149,9 @@ export const RegisterForm = ({ isDark }: { isDark: boolean }) => {
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             className={`appearance-none rounded-none relative block w-full px-3 py-3 border ${
-              isDark 
-                ? 'border-gray-600 placeholder-gray-400 text-gray-100 bg-gray-800 focus:ring-[#0ea5e9] focus:border-[#0ea5e9]' 
-                : 'border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-[#0ea5e9] focus:border-[#0ea5e9]'
+              isDark
+                ? "border-gray-600 placeholder-gray-400 text-gray-100 bg-gray-800 focus:ring-[#0ea5e9] focus:border-[#0ea5e9]"
+                : "border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-[#0ea5e9] focus:border-[#0ea5e9]"
             } rounded-t-md focus:outline-none focus:z-10 transition-colors`}
             placeholder="Username"
           />
@@ -152,8 +160,14 @@ export const RegisterForm = ({ isDark }: { isDark: boolean }) => {
         {/* Email field */}
         <div className="relative">
           <div className="flex gap-2 items-center mb-3">
-            <Mail className={`h-5 w-5 ${isDark ? 'text-gray-400' : 'text-gray-500'}`} />
-            <label htmlFor="email-address" className="text-sm">Email address</label>
+            <Mail
+              className={`h-5 w-5 ${
+                isDark ? "text-gray-400" : "text-gray-500"
+              }`}
+            />
+            <label htmlFor="email-address" className="text-sm">
+              Email address
+            </label>
           </div>
           <input
             id="email-address"
@@ -163,9 +177,9 @@ export const RegisterForm = ({ isDark }: { isDark: boolean }) => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className={`appearance-none rounded-none relative block w-full px-3 py-3 border ${
-              isDark 
-                ? 'border-gray-600 placeholder-gray-400 text-gray-100 bg-gray-800 focus:ring-[#0ea5e9] focus:border-[#0ea5e9]' 
-                : 'border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-[#0ea5e9] focus:border-[#0ea5e9]'
+              isDark
+                ? "border-gray-600 placeholder-gray-400 text-gray-100 bg-gray-800 focus:ring-[#0ea5e9] focus:border-[#0ea5e9]"
+                : "border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-[#0ea5e9] focus:border-[#0ea5e9]"
             } rounded-t-md focus:outline-none focus:z-10 transition-colors`}
             placeholder="Email address"
           />
@@ -174,8 +188,14 @@ export const RegisterForm = ({ isDark }: { isDark: boolean }) => {
         {/* Password fields */}
         <div className="relative">
           <div className="flex gap-2 items-center mb-3">
-            <Lock className={`h-5 w-5 ${isDark ? 'text-gray-400' : 'text-gray-500'}`} />
-            <label htmlFor="password" className="text-sm">Password</label>
+            <Lock
+              className={`h-5 w-5 ${
+                isDark ? "text-gray-400" : "text-gray-500"
+              }`}
+            />
+            <label htmlFor="password" className="text-sm">
+              Password
+            </label>
           </div>
           <div className="relative">
             <input
@@ -186,9 +206,9 @@ export const RegisterForm = ({ isDark }: { isDark: boolean }) => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className={`appearance-none rounded-none relative block w-full px-3 py-3 border ${
-                isDark 
-                  ? 'border-gray-600 placeholder-gray-400 text-gray-100 bg-gray-800 focus:ring-[#0ea5e9] focus:border-[#0ea5e9]' 
-                  : 'border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-[#0ea5e9] focus:border-[#0ea5e9]'
+                isDark
+                  ? "border-gray-600 placeholder-gray-400 text-gray-100 bg-gray-800 focus:ring-[#0ea5e9] focus:border-[#0ea5e9]"
+                  : "border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-[#0ea5e9] focus:border-[#0ea5e9]"
               } focus:outline-none focus:z-10 transition-colors`}
               placeholder="Password"
             />
@@ -198,16 +218,27 @@ export const RegisterForm = ({ isDark }: { isDark: boolean }) => {
               className="absolute right-3 top-1/2 -translate-y-1/2"
             >
               {showPassword ? (
-                <EyeOff className={`h-5 w-5 ${isDark ? 'text-gray-400' : 'text-gray-500'}`} />
+                <EyeOff
+                  className={`h-5 w-5 ${
+                    isDark ? "text-gray-400" : "text-gray-500"
+                  }`}
+                />
               ) : (
-                <Eye className={`h-5 w-5 ${isDark ? 'text-gray-400' : 'text-gray-500'}`} />
+                <Eye
+                  className={`h-5 w-5 ${
+                    isDark ? "text-gray-400" : "text-gray-500"
+                  }`}
+                />
               )}
             </button>
           </div>
-          
+
           {password && (
             <div className="mt-2 space-y-2">
-              <PasswordStrength passwordChecks={passwordChecks} isDark={isDark} />
+              <PasswordStrength
+                passwordChecks={passwordChecks}
+                isDark={isDark}
+              />
               <PasswordChecklist passwordChecks={passwordChecks} />
             </div>
           )}
@@ -215,8 +246,14 @@ export const RegisterForm = ({ isDark }: { isDark: boolean }) => {
 
         <div className="relative">
           <div className="flex gap-2 items-center mb-3">
-            <Lock className={`h-5 w-5 ${isDark ? 'text-gray-400' : 'text-gray-500'}`} />
-            <label htmlFor="confirm-password" className="text-sm">Confirm Password</label>
+            <Lock
+              className={`h-5 w-5 ${
+                isDark ? "text-gray-400" : "text-gray-500"
+              }`}
+            />
+            <label htmlFor="confirm-password" className="text-sm">
+              Confirm Password
+            </label>
           </div>
           <div className="relative">
             <input
@@ -227,9 +264,9 @@ export const RegisterForm = ({ isDark }: { isDark: boolean }) => {
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               className={`appearance-none rounded-none relative block w-full px-3 py-3 border ${
-                isDark 
-                  ? 'border-gray-600 placeholder-gray-400 text-gray-100 bg-gray-800 focus:ring-[#0ea5e9] focus:border-[#0ea5e9]' 
-                  : 'border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-[#0ea5e9] focus:border-[#0ea5e9]'
+                isDark
+                  ? "border-gray-600 placeholder-gray-400 text-gray-100 bg-gray-800 focus:ring-[#0ea5e9] focus:border-[#0ea5e9]"
+                  : "border-gray-300 placeholder-gray-500 text-gray-900 focus:ring-[#0ea5e9] focus:border-[#0ea5e9]"
               } rounded-b-md focus:outline-none focus:z-10 transition-colors`}
               placeholder="Confirm Password"
             />
@@ -239,19 +276,32 @@ export const RegisterForm = ({ isDark }: { isDark: boolean }) => {
               className="absolute right-3 top-1/2 -translate-y-1/2"
             >
               {showConfirmPassword ? (
-                <EyeOff className={`h-5 w-5 ${isDark ? 'text-gray-400' : 'text-gray-500'}`} />
+                <EyeOff
+                  className={`h-5 w-5 ${
+                    isDark ? "text-gray-400" : "text-gray-500"
+                  }`}
+                />
               ) : (
-                <Eye className={`h-5 w-5 ${isDark ? 'text-gray-400' : 'text-gray-500'}`} />
+                <Eye
+                  className={`h-5 w-5 ${
+                    isDark ? "text-gray-400" : "text-gray-500"
+                  }`}
+                />
               )}
             </button>
           </div>
         </div>
       </div>
 
-      <motion.div whileHover={{ scale: isLoading ? 1 : 1.02 }} whileTap={{ scale: isLoading ? 1 : 0.98 }}>
+      <motion.div
+        whileHover={{ scale: isSigningUp ? 1 : 1.02 }}
+        whileTap={{ scale: isSigningUp ? 1 : 0.98 }}
+      >
         <button
           type="submit"
-          disabled={isLoading || !isPasswordValid() || password !== confirmPassword}
+          disabled={
+            isSigningUp || !isPasswordValid() || password !== confirmPassword
+          }
           className={`
             group relative w-full flex justify-center py-3 px-4 
             border border-transparent text-sm font-medium rounded-md 
@@ -260,17 +310,21 @@ export const RegisterForm = ({ isDark }: { isDark: boolean }) => {
             focus:outline-none focus:ring-2 focus:ring-offset-2 
             focus:ring-[#0ea5e9] dark:focus:ring-[#38bdf8] 
             transition-colors cursor-pointer
-            ${(isLoading || !isPasswordValid() || password !== confirmPassword) ? 'opacity-70 cursor-not-allowed' : ''}
+            ${
+              isSigningUp || !isPasswordValid() || password !== confirmPassword
+                ? "opacity-70 cursor-not-allowed"
+                : ""
+            }
           `}
         >
-          {isLoading ? (
+          {isSigningUp ? (
             <Loader2 className="animate-spin h-5 w-5 mr-2" />
           ) : (
             <span className="absolute left-0 inset-y-0 flex items-center pl-3">
               <UserPlus className="h-5 w-5 text-[#7dd3fc] group-hover:text-[#bae6fd]" />
             </span>
           )}
-          {isLoading ? 'Creating account...' : 'Create account'}
+          {isSigningUp ? "Creating account..." : "Create account"}
         </button>
       </motion.div>
     </motion.form>
